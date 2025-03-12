@@ -54,11 +54,15 @@ public:
 class Bullet : public MoveableObject {
 protected:
 	bool isActive;
+	int direction;
 public:
 	Bullet(float x, float y, float vx, float vy, LPTEXTURE lTex) : MoveableObject(x, y, vx, vy, lTex, NULL, NULL, NULL)
 	{
 		this->isActive = false;
+		this->direction = 0;
 	}
+	void SetDirection(int newDir) { this->direction = newDir; }
+	int GetDirection() const { return direction; }
 	bool GetIsActive() { return isActive; }
 	void Update(DWORD dt) override;
 	void Render() override;

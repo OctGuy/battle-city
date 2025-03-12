@@ -37,20 +37,24 @@ CGameObject::~CGameObject()
 
 void Bullet::Update(DWORD dt) {
 	if (isActive) {
-		Player* player = CGame::GetInstance()->GetPlayer();
-		int bulletDirection = player->GetDirection();
+		/*Player* player = CGame::GetInstance()->GetPlayer();
+		int bulletDirection = player->GetDirection();*/
 
-		if (bulletDirection == 1) {
+		if (direction == 1) {
 			vy = -BULLET_SPEED;
+			vx = 0;
 		}
-		else if (bulletDirection == 2) {
+		else if (direction == 2) {
 			vy = BULLET_SPEED;
+			vx = 0;
 		}
-		else if (bulletDirection == 3) {
+		else if (direction == 3) {
 			vx = -BULLET_SPEED;
+			vy = 0;
 		}
-		else if (bulletDirection == 4) {
+		else if (direction == 4) {
 			vx = BULLET_SPEED;
+			vy = 0;
 		}
 
 		x += vx * dt;
@@ -119,7 +123,12 @@ void Player::HandleShooting(DWORD dt) {
 	if (!bullet->GetIsActive()) {
 		bullet->SetIsActive(true);
 		bullet->SetPosition(x, y);
-		bullet->SetVelocity(vx, vy);
+		bullet->SetDirection(direction);
+
+		/*if (direction == 1) {
+			bullet->SetVelocity
+		}*/
+		//bullet->SetVelocity(vx, vy);
 	}
 }
 
