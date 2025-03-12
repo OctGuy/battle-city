@@ -69,6 +69,7 @@ class Tank : public MoveableObject {
 protected:
 	Bullet* bullet;
 	int direction;
+	bool isMoving;
 public:
 	Tank(float x, float y, float vx, float vy,
 		LPTEXTURE lTex, LPTEXTURE rTex, LPTEXTURE uTex, LPTEXTURE dTex,
@@ -78,10 +79,12 @@ public:
 	{
 		this->bullet = new Bullet(bl_x, bl_y, bl_vx, bl_vy, bl_lTex);
 		this->direction = 0;
+		this->isMoving = false;
 	};
 
 	Bullet* GetBullet() { return bullet; }
-	virtual int GetDirection() = 0;
+	virtual void SetDirection() = 0;
+	int GetDirection() { return direction; }
 	virtual void HandleShooting(DWORD dt) = 0;
 	void Render() override;
 };
@@ -97,7 +100,8 @@ public:
 
 	void Update(DWORD dt) override;
 	void HandleShooting(DWORD dt) override;
-	int GetDirection() override;
+	void SetDirection() override;
+	//int GetDirection() override;
 };
 
 class Enemy : public Tank {

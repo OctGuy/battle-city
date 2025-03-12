@@ -38,8 +38,21 @@ CGameObject::~CGameObject()
 void Bullet::Update(DWORD dt) {
 	if (isActive) {
 		Player* player = CGame::GetInstance()->GetPlayer();
-		vx = 0.1;
-		vy = 0.1;
+		int bulletDirection = player->GetDirection();
+
+		if (bulletDirection == 1) {
+			vy = -BULLET_SPEED;
+		}
+		else if (bulletDirection == 2) {
+			vy = BULLET_SPEED;
+		}
+		else if (bulletDirection == 3) {
+			vx = -BULLET_SPEED;
+		}
+		else if (bulletDirection == 4) {
+			vx = BULLET_SPEED;
+		}
+
 		x += vx * dt;
 		y += vy * dt;
 	}
@@ -72,6 +85,7 @@ void Tank::Render() {
 	else if (direction == 4) {
 		CGame::GetInstance()->Draw(x, y, rightTexture);
 	}
+
 	bullet->Render();
 }
 
@@ -79,20 +93,26 @@ void Tank::Render() {
 #define PLAYER_WIDTH 20
 #define PLAYER_HEIGHT 20
 
-int Player::GetDirection() {
+void Player::SetDirection() {
 	if (GetAsyncKeyState('W') & 0x8000) {
-		return 1;
+		direction = 1;
+		isMoving = true;
 	}
-	if (GetAsyncKeyState('S') & 0x8000) {
-		return 2;
+	else if (GetAsyncKeyState('S') & 0x8000) {
+		direction = 2;
+		isMoving = true;
 	}
-	if (GetAsyncKeyState('A') & 0x8000) {
-		return 3;
+	else if (GetAsyncKeyState('A') & 0x8000) {
+		direction = 3;
+		isMoving = true;
 	}
-	if (GetAsyncKeyState('D') & 0x8000) {
-		return 4;
+	else if (GetAsyncKeyState('D') & 0x8000) {
+		direction = 4;
+		isMoving = true;
 	}
-	return 0;
+	else {
+		isMoving = false;
+	}
 }
 
 void Player::HandleShooting(DWORD dt) {
@@ -109,22 +129,25 @@ void Player::Update(DWORD dt)
 	// Reset velocity
 	vx = 0;
 	vy = 0;
+	
+	SetDirection();
 
 	int newDirection = GetDirection();
 	if (newDirection != 0) {
 		direction = newDirection;
 	}
+
 	// Check for key presses and update velocity accordingly
-	if (GetDirection() == 1) {
+	if (GetDirection() == 1 && isMoving) {
 		vy = -PLAYER_SPEED;  // Move up
 	}
-	if (GetDirection() == 2) {
+	if (GetDirection() == 2 && isMoving) {
 		vy = PLAYER_SPEED;   // Move down
 	}
-	if (GetDirection() == 3) {
+	if (GetDirection() == 3 && isMoving) {
 		vx = -PLAYER_SPEED;  // Move left
 	}
-	if (GetDirection() == 4) {
+	if (GetDirection() == 4 && isMoving) {
 		vx = PLAYER_SPEED;   // Move right
 	}
 	// Update spaceship's position based on velocity    
